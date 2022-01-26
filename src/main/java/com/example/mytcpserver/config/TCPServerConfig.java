@@ -14,6 +14,7 @@ import org.springframework.integration.ip.tcp.connection.AbstractClientConnectio
 import org.springframework.integration.ip.tcp.connection.AbstractServerConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpNetClientConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpNetServerConnectionFactory;
+import org.springframework.integration.ip.tcp.serializer.ByteArrayLfSerializer;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.handler.annotation.Header;
@@ -40,7 +41,11 @@ public class TCPServerConfig {
     //    Server and client ConnectionFactories
     @Bean
     public AbstractServerConnectionFactory serverConnectionFactory() {
-        return new TcpNetServerConnectionFactory(port);
+
+                var clientCF = new TcpNetServerConnectionFactory(port);
+                clientCF.setSerializer(new ByteArrayLfSerializer());
+                clientCF.setDeserializer(new ByteArrayLfSerializer());
+                return clientCF;
     }
 
 
